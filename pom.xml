@@ -8,13 +8,36 @@
 	<description>	</description>
 	<developers>
 		<developer>
-			Richard Tiffin @trickBytes
+			<name>Richard Tiffin</name>
+			<organization>Akoolla</organization>
+			<properties>
+				<twitter>@trickyBytes</twitter>
+			</properties>
 		</developer>
 	</developers>
 	<organization>
 		<name>Akoolla</name>
 		<url>http://www.akoolla.com</url>
 	</organization>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.17</version>
+			</plugin>
+		</plugins>
+	</build>
 
 	<dependencies>
 		<dependency>
