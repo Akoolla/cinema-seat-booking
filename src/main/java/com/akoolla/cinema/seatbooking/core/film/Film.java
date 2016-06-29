@@ -1,9 +1,9 @@
 package com.akoolla.cinema.seatbooking.core.film;
 
-import lombok.EqualsAndHashCode;
-
 import org.pojomatic.Pojomatic;
 import org.pojomatic.annotations.AutoProperty;
+
+import lombok.EqualsAndHashCode;
 
 /**
  * Film.
