@@ -52,7 +52,7 @@ public class ScreeningBookingTests extends Mockito {
     @Test
     public void AScreeningShouldReturnTheCorrectNumberOfBookedSeats() throws Exception {
         IBookingRequest bookingRequest = mock(IBookingRequest.class);
-        when(bookingRequest.getNumberOfSeats()).thenReturn(2);
+        when(bookingRequest.getNumberOfStandardSeats()).thenReturn(2);
         screening.createBooking(bookingRequest);
 
         assertEquals("No. of booked seats",
@@ -68,7 +68,7 @@ public class ScreeningBookingTests extends Mockito {
     @Test(expected = ScreeningIsFullyBookedException.class)
     public void IfABookingIsOverSubscribedAWarningShouldBeGiven() throws Exception {
         IBookingRequest bookingRequest = mock(IBookingRequest.class);
-        when(bookingRequest.getNumberOfSeats()).thenReturn(10);
+        when(bookingRequest.getNumberOfStandardSeats()).thenReturn(10);
 
         screening.createBooking(bookingRequest);
     }
@@ -90,9 +90,12 @@ public class ScreeningBookingTests extends Mockito {
     public void CancelingABookingShouldDecreaseTheNumberOfSeatsBooked() throws Exception {
         IBookingRequest firstBookingRequest = mock(IBookingRequest.class);
         when(firstBookingRequest.getNumberOfSeats()).thenReturn(2);
+        when(firstBookingRequest.getNumberOfStandardSeats()).thenReturn(1);
+        when(firstBookingRequest.getNumberOfConcessionSeats()).thenReturn(1);
         screening.createBooking(firstBookingRequest);
 
         IBookingRequest secondBookingRequest = mock(IBookingRequest.class);
+        when(secondBookingRequest.getNumberOfStandardSeats()).thenReturn(1);
         when(secondBookingRequest.getNumberOfSeats()).thenReturn(1);
 
         IBooking secondBooking = screening.createBooking(secondBookingRequest);

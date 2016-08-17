@@ -10,12 +10,11 @@ import org.joda.time.DateTime;
  */
 public interface IBooking {
 
-    /**
-     * TODO.
-     *
-     * @return
-     */
-    int getNumberOfSeats();
+    int getNumberOfStandardSeats();
+    
+    int getNumberOfConcessionSeats();
+    
+    int getNumberOfWheelChairs();
 
     boolean hasBeenPaidFor();
 

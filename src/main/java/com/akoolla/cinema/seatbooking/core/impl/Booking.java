@@ -28,27 +28,32 @@ public class Booking implements IBooking {
     private final IBookingReference bookingReference;
     
     @JsonProperty
-    private int numberOfSeats = 0;
+    private int numStandardSeats = 0;
+    @JsonProperty
+    private int numConcessionSeats  = 0;
+    @JsonProperty
+    private int numWheelChairs  = 0;
+    
     
     @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = As.PROPERTY, property = "@class")
     @JsonProperty
     private final ICustomer customer;
 
     @JsonCreator
-    public Booking(@JsonProperty("numberOfSeats") int numberOfSeats, @JsonProperty("customer") ICustomer customer) {
+    public Booking(
+            @JsonProperty("numStandardSeats") int numStandardSeats, 
+            @JsonProperty("numConcessionSeats") int numConcessionSeats, 
+            @JsonProperty("numWheelChairs") int numWheelChairs, 
+            @JsonProperty("customer") ICustomer customer) {
+        
+        
         bookingReference = new BookingReference();
-        this.numberOfSeats = numberOfSeats;
+        this.numStandardSeats = numStandardSeats;
+        this.numConcessionSeats = numConcessionSeats;
+        this.numWheelChairs = numWheelChairs;
+        
         this.customer = customer;
     }
-
-    /**
-     * @return
-     * @see com.akoolla.cinemabooking.IBooking#getNumberOfSeats()
-     */
-    public int getNumberOfSeats() {
-        return numberOfSeats;
-    }
-
     /**
      * @return
      * @see com.akoolla.cinemabooking.IBooking#hasBeenPaidFor()
@@ -87,5 +92,29 @@ public class Booking implements IBooking {
      */
     public IBookingReference getBookingReference() {
         return bookingReference;
+    }
+    /**
+     * @return
+     * @see com.akoolla.cinema.seatbooking.core.IBooking#getNumberOfStandardSeats()
+     */
+    @Override
+    public int getNumberOfStandardSeats() {
+        return numStandardSeats;
+    }
+    /**
+     * @return
+     * @see com.akoolla.cinema.seatbooking.core.IBooking#getNumberOfConcessionSeats()
+     */
+    @Override
+    public int getNumberOfConcessionSeats() {
+        return numConcessionSeats;
+    }
+    /**
+     * @return
+     * @see com.akoolla.cinema.seatbooking.core.IBooking#getNumberOfWheelChairs()
+     */
+    @Override
+    public int getNumberOfWheelChairs() {
+        return getNumberOfConcessionSeats();
     }
 }

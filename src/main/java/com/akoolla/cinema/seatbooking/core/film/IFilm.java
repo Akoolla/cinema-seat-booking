@@ -12,4 +12,6 @@ public interface IFilm {
     public String getName();
 
     public String getDescription();
+    
+    public String getRating();
 }

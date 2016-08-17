@@ -65,7 +65,7 @@ public class Screening implements IScreening, Comparable<IScreening> {
         this(screeningTime, numberOfBookableSeats);
 
         // TODO: Hack to fix jackson deserialisation issue - should really look at jackson rather than do this
-        this.film = new Film(film.getUniqueReference(), film.getName(), film.getDescription());
+        this.film = new Film(film.getUniqueReference(), film.getName(), film.getDescription(), film.getRating());
     }
 
     /**
@@ -75,13 +75,17 @@ public class Screening implements IScreening, Comparable<IScreening> {
      */
     public IBooking createBooking(IBookingRequest bookingRequest) throws ScreeningIsFullyBookedException {
 
-        if (((bookingRequest.getNumberOfSeats() + getNumberOfBookedSeats()) > numberOfBookableSeats)
+        
+        //TODO: More validation on seats being booked for wheelchairs..
+        if (((bookingRequest.getNumberOfStandardSeats() + bookingRequest.getNumberOfConcessionSeats() + getNumberOfBookedSeats()) > numberOfBookableSeats)
                 & (bookingRequest.overrideSeatLimits() == false)) {
             throw new ScreeningIsFullyBookedException();
         }
+                
 
-        Booking booking = new Booking(
-                bookingRequest.getNumberOfSeats(),
+        Booking booking = new Booking(bookingRequest.getNumberOfStandardSeats(), 
+                bookingRequest.getNumberOfConcessionSeats(), 
+                bookingRequest.getNumberOfWheelChairs(), 
                 new Customer(bookingRequest.getCustomerName(), bookingRequest.getContactNumber()));
         bookings.add(booking);
 
@@ -106,7 +110,7 @@ public class Screening implements IScreening, Comparable<IScreening> {
         int seats = 0;
 
         for (IBooking booking : bookings) {
-            seats += booking.getNumberOfSeats();
+            seats += booking.getNumberOfConcessionSeats() + booking.getNumberOfStandardSeats();
         }
 
         return seats;

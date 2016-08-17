@@ -14,6 +14,17 @@ public interface IBookingRequest {
     boolean overrideSeatLimits();
 
     void overrideSeatLimits(boolean overide);
-
+    
+    /**
+     * This is the number of concession + standard seats.
+     * 
+     * @return
+     */
     int getNumberOfSeats();
+    
+    int getNumberOfStandardSeats();
+    
+    int getNumberOfConcessionSeats();
+    
+    int getNumberOfWheelChairs();
 }

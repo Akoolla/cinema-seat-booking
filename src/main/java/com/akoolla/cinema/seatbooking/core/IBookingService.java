@@ -35,6 +35,8 @@ public interface IBookingService {
     IScreening findScreening(final String filmName, final DateTime screeningDate);
 
     IScreening findNextScreening(final IFilm film);
+    
+    IScreening findScreening(final String screeningRef);
 
     void cancelABooking(final IBooking bookingToCancel);
 
