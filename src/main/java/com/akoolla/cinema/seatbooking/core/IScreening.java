@@ -39,4 +39,6 @@ public interface IScreening {
      * @param booking
      */
     void cancelBooking(IBooking booking);
+    
+    int getCostOfBookingInPence(IBooking booking);
 }

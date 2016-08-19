@@ -169,4 +169,14 @@ public class Screening implements IScreening, Comparable<IScreening> {
     public String get_id() {
         return _id;
     }
+
+    /**
+     * @param booking
+     * @return
+     * @see com.akoolla.cinema.seatbooking.core.IScreening#getCostOfBookingInPence(com.akoolla.cinema.seatbooking.core.IBooking)
+     */
+    @Override
+    public int getCostOfBookingInPence(IBooking booking) {
+        return 0;
+    }
 }
