@@ -22,7 +22,7 @@ public interface IScreening {
 
     List<IBooking> listBookings();
 
-    int getNumberOfBookedSeats();
+    int getNumberOfBookedSeats(SEAT_TYPE ofSeats);
 
     IFilm getFilm();
 
@@ -31,7 +31,7 @@ public interface IScreening {
      *
      * @return
      */
-    int getNumberOfBookableSeats();
+    int getNumberOfBookableSeats(SEAT_TYPE ofSeats);
 
     /**
      * TODO.
@@ -41,4 +41,28 @@ public interface IScreening {
     void cancelBooking(IBooking booking);
     
     int getCostOfBookingInPence(IBooking booking);
+    
+    public enum SEAT_TYPE {
+        STANDARD, WHEELCHAIR;
+    }
+    
+    int getConncessionCost();
+    void setConcessionCost(int i);
+
+   
+    void setStandardCost(int i);
+    int getStandardCost();
+
+    void setWheelChairCost(int i);
+    int getWheelChairCost();
+
+    void setMemberPrice(int i);
+    int getMemberPrice();
+
+    void setMemberConcession(int i);
+    int getMemberConcession();
+
+    void setMemberWheelChairPrice(int i);
+    int getMemberWheelChairPrice();
 }
+

@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import com.akoolla.cinema.seatbooking.core.IScreening.SEAT_TYPE;
 import com.akoolla.cinema.seatbooking.core.film.IFilm;
 import com.akoolla.cinema.seatbooking.core.impl.Screening;
 
@@ -24,14 +25,14 @@ public class ScreeningBookingTests extends Mockito {
 
     @Before
     public void initialiseTests() {
-        screening = new Screening(new DateTime(), mock(IFilm.class), 9);
+        screening = new Screening(new DateTime(), mock(IFilm.class), 9, 0);
     }
 
     @Test
     public void ScreeningShouldReturnTheDateTimeOfTheScreening() throws Exception {
         DateTime now = new DateTime();
 
-        screening = new Screening(now, mock(IFilm.class), 9);
+        screening = new Screening(now, mock(IFilm.class), 9, 0);
         assertEquals(now, screening.getScreeningTime());
     }
 
@@ -56,13 +57,13 @@ public class ScreeningBookingTests extends Mockito {
         screening.createBooking(bookingRequest);
 
         assertEquals("No. of booked seats",
-                Integer.valueOf(2), Integer.valueOf(screening.getNumberOfBookedSeats()));
+                Integer.valueOf(2), Integer.valueOf(screening.getNumberOfBookedSeats(SEAT_TYPE.STANDARD)));
     }
 
     @Test
     public void ItShouldBePossibleToSetTheNumberOfSeatsAvailableForAScreening() {
-        IScreening screening = new Screening(new DateTime(), mock(IFilm.class), 20);
-        assertEquals(20, screening.getNumberOfBookableSeats());
+        IScreening screening = new Screening(new DateTime(), mock(IFilm.class), 20, 0);
+        assertEquals(20, screening.getNumberOfBookableSeats(SEAT_TYPE.STANDARD));
     }
 
     @Test(expected = ScreeningIsFullyBookedException.class)
@@ -99,10 +100,10 @@ public class ScreeningBookingTests extends Mockito {
         when(secondBookingRequest.getNumberOfSeats()).thenReturn(1);
 
         IBooking secondBooking = screening.createBooking(secondBookingRequest);
-        assertEquals(3, screening.getNumberOfBookedSeats());
+        assertEquals(3, screening.getNumberOfBookedSeats(SEAT_TYPE.STANDARD));
 
         screening.cancelBooking(secondBooking);
-        assertEquals(firstBookingRequest.getNumberOfSeats(), screening.getNumberOfBookedSeats());
+        assertEquals(firstBookingRequest.getNumberOfSeats(), screening.getNumberOfBookedSeats(SEAT_TYPE.STANDARD));
     }
     
     @Test

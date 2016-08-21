@@ -26,7 +26,7 @@ public interface IBookingService {
      * @throws IllegalArgumentException
      * @since 1.0
      */
-    void createScreening(final IScreening screening) throws IllegalArgumentException;
+    IScreening createScreening(final IScreening screening) throws IllegalArgumentException;
 
     /**
      * TODO.

@@ -40,7 +40,19 @@ public class Screening implements IScreening, Comparable<IScreening> {
     private final List<IBooking> bookings;
 
     private Film film;
-    private int numberOfBookableSeats = 0;
+    private int maxSeats = 0;
+    private int maxWheelchairs = 0;
+    
+    //Costs
+    private int concessionCost = 0;
+    private int StandardCost = 0;
+    private int wheelChairCost = 0;
+    
+    //Member costs
+    private int memberPrice = 0;
+    private int memberConceesions = 0;
+    private int memberWheelChair = 0;
+    
 
     /**
      * Return the film.
@@ -55,14 +67,15 @@ public class Screening implements IScreening, Comparable<IScreening> {
         bookings = new ArrayList<>();
     }
 
-    public Screening(DateTime screeningTime, int numberOfBookableSeats) {
+    public Screening(DateTime screeningTime, int seats, int wheelchair) {
         this();
         this.screeningTime = screeningTime;
-        this.numberOfBookableSeats = numberOfBookableSeats;
+        this.maxSeats = seats;
+        this.maxWheelchairs = wheelchair;
     }
 
-    public Screening(DateTime screeningTime, IFilm film, int numberOfBookableSeats) {
-        this(screeningTime, numberOfBookableSeats);
+    public Screening(DateTime screeningTime, IFilm film, int numOfSeats, int numOfWheelChairs) {
+        this(screeningTime, numOfSeats, numOfWheelChairs);
 
         // TODO: Hack to fix jackson deserialisation issue - should really look at jackson rather than do this
         this.film = new Film(film.getUniqueReference(), film.getName(), film.getDescription(), film.getRating());
@@ -77,7 +90,7 @@ public class Screening implements IScreening, Comparable<IScreening> {
 
         
         //TODO: More validation on seats being booked for wheelchairs..
-        if (((bookingRequest.getNumberOfStandardSeats() + bookingRequest.getNumberOfConcessionSeats() + getNumberOfBookedSeats()) > numberOfBookableSeats)
+        if (((bookingRequest.getNumberOfStandardSeats() + bookingRequest.getNumberOfConcessionSeats() + getNumberOfBookedSeats(SEAT_TYPE.STANDARD)) > getNumberOfBookableSeats(SEAT_TYPE.STANDARD))
                 & (bookingRequest.overrideSeatLimits() == false)) {
             throw new ScreeningIsFullyBookedException();
         }
@@ -102,11 +115,12 @@ public class Screening implements IScreening, Comparable<IScreening> {
     }
 
     /**
+     * @param standard 
      * @return
      * @see com.akoolla.cinemabooking.IScreening#getNumberOfBookedSeats()
      */
     @JsonIgnore
-    public int getNumberOfBookedSeats() {
+    public int getNumberOfBookedSeats(SEAT_TYPE standard) {
         int seats = 0;
 
         for (IBooking booking : bookings) {
@@ -122,14 +136,6 @@ public class Screening implements IScreening, Comparable<IScreening> {
      */
     public DateTime getScreeningTime() {
         return screeningTime;
-    }
-
-    /**
-     * @return
-     * @see com.akoolla.cinemabooking.IScreening#getNumberOfSeats()
-     */
-    public int getNumberOfBookableSeats() {
-        return numberOfBookableSeats;
     }
 
     /**
@@ -178,5 +184,130 @@ public class Screening implements IScreening, Comparable<IScreening> {
     @Override
     public int getCostOfBookingInPence(IBooking booking) {
         return 0;
+    }
+
+    /**
+     * @param ofSeats
+     * @return
+     * @see com.akoolla.cinema.seatbooking.core.IScreening#getNumberOfBookableSeats(com.akoolla.cinema.seatbooking.core.IScreening.SEAT_TYPE)
+     */
+    @Override
+    public int getNumberOfBookableSeats(SEAT_TYPE ofSeats) {
+        switch (ofSeats) {
+            case STANDARD:
+                return maxSeats;
+            case WHEELCHAIR:
+                return maxWheelchairs;
+            default:
+                return maxSeats;
+        }
+    }
+
+    /**
+     * @return
+     * @see com.akoolla.cinema.seatbooking.core.IScreening#getConncessionCost()
+     */
+    @Override
+    public int getConncessionCost() {
+        return concessionCost;
+    }
+
+    /**
+     * @param i
+     * @see com.akoolla.cinema.seatbooking.core.IScreening#setConcessionCost(int)
+     */
+    @Override
+    public void setConcessionCost(int concessionCost) {
+        this.concessionCost = concessionCost;
+    }
+
+    /**
+     * @param i
+     * @see com.akoolla.cinema.seatbooking.core.IScreening#setStandardCost(int)
+     */
+    @Override
+    public void setStandardCost(int StandardCost) {
+        this.StandardCost = StandardCost;
+    }
+
+    /**
+     * @return
+     * @see com.akoolla.cinema.seatbooking.core.IScreening#getStandardCost()
+     */
+    @Override
+    public int getStandardCost() {
+        return StandardCost;
+    }
+
+    /**
+     * @param wheelChairCost
+     * @see com.akoolla.cinema.seatbooking.core.IScreening#setWheelChairCost(int)
+     */
+    @Override
+    public void setWheelChairCost(int wheelChairCost) {
+        this.wheelChairCost = wheelChairCost;
+    }
+
+    /**
+     * @return
+     * @see com.akoolla.cinema.seatbooking.core.IScreening#getWheelChairCost()
+     */
+    @Override
+    public int getWheelChairCost() {
+        return wheelChairCost;
+    }
+
+    /**
+     * @param i
+     * @see com.akoolla.cinema.seatbooking.core.IScreening#setMemberPrice(int)
+     */
+    @Override
+    public void setMemberPrice(int memberPrice) {
+        this.memberPrice = memberPrice;
+    }
+
+    /**
+     * @return
+     * @see com.akoolla.cinema.seatbooking.core.IScreening#getMemberPrice()
+     */
+    @Override
+    public int getMemberPrice() {
+        return memberPrice;
+    }
+
+    /**
+     * @param memberConceesions
+     * @see com.akoolla.cinema.seatbooking.core.IScreening#setMemberConcession(int)
+     */
+    @Override
+    public void setMemberConcession(int memberConceesions) {
+        this.memberConceesions = memberConceesions;
+    }
+
+    /**
+     * @return
+     * @see com.akoolla.cinema.seatbooking.core.IScreening#getMemberConcession()
+     */
+    @Override
+    public int getMemberConcession() {
+        return memberConceesions;
+    }
+
+    /**
+     * @param memberWheelChair
+     * @see com.akoolla.cinema.seatbooking.core.IScreening#setMemberWheelChairPrice(int)
+     */
+    @Override
+    public void setMemberWheelChairPrice(int memberWheelChair) {
+        this.memberWheelChair = memberWheelChair;
+    }
+
+    /**
+     * @return
+     * @see com.akoolla.cinema.seatbooking.core.IScreening#getMemberWheelChairPrice()
+     */
+    @Override
+    public int getMemberWheelChairPrice() {
+        return memberWheelChair;
     }
 }
