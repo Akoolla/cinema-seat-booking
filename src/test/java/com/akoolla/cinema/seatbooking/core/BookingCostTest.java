@@ -29,16 +29,15 @@ public class BookingCostTest {
     public void canGetCostOfDifferentSeatTypesInScreenign() throws Exception {
         IScreening screening = new Screening(
                 DateTime.now(), new Film("x", "x", "x", "15"), 20, 1);
+               
+        screening.setConcessionPrice(400);
+        assertEquals("Cost of consesions", 400, screening.getConncessionPrice());
         
+        screening.setStandardPrice(600);
+        assertEquals("Cost of standard", 600, screening.getStandardPrice());
         
-        screening.setConcessionCost(400);
-        assertEquals("Cost of consesions", 400, screening.getConncessionCost());
-        
-        screening.setStandardCost(600);
-        assertEquals("Cost of standard", 600, screening.getStandardCost());
-        
-        screening.setWheelChairCost(400);
-        assertEquals("Cost of wheelchair", 400, screening.getWheelChairCost());
+        screening.setWheelChairPrice(400);
+        assertEquals("Cost of wheelchair", 400, screening.getWheelChairPrice());
         
         screening.setMemberPrice(350);
         assertEquals("Price for a member", 350, screening.getMemberPrice());

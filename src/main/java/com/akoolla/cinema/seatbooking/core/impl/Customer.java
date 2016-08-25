@@ -11,17 +11,25 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @version $Id$
  */
 public class Customer implements ICustomer {
-
+    public static final String NAME_JSON_PROP = "name";
+    public static final String TEL_JSON_PROP = "tel";
+    public static final String EMAIL_JSON_PROP = "email";
+    
     @JsonProperty()
-    private final String customerName;
+    private final String name;
     @JsonProperty()
-    private final String contactNumber;
+    private final String tel;
+    @JsonProperty()
+    private final String email;
 
+    
     @JsonCreator
-    public Customer(@JsonProperty("customerName") final String customerName,
-            @JsonProperty("contactNumber") final String contactNumber) {
-        this.contactNumber = contactNumber;
-        this.customerName = customerName;
+    public Customer(
+            @JsonProperty(NAME_JSON_PROP) final String customerName,
+            @JsonProperty(TEL_JSON_PROP) final String contactNumber) {
+        this.name = customerName;
+        this.tel = contactNumber;
+        this.email = "TODO";
     }
 
     /**
@@ -30,7 +38,7 @@ public class Customer implements ICustomer {
      */
     @Override
     public String getCustomerName() {
-        return customerName;
+        return name;
     }
 
     /**
@@ -39,7 +47,7 @@ public class Customer implements ICustomer {
      */
     @Override
     public String getContactNumber() {
-        return contactNumber;
+        return tel;
     }
 
 }

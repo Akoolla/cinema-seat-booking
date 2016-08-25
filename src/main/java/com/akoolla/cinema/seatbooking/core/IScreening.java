@@ -46,15 +46,15 @@ public interface IScreening {
         STANDARD, WHEELCHAIR;
     }
     
-    int getConncessionCost();
-    void setConcessionCost(int i);
+    int getConncessionPrice();
+    void setConcessionPrice(int i);
 
    
-    void setStandardCost(int i);
-    int getStandardCost();
+    void setStandardPrice(int i);
+    int getStandardPrice();
 
-    void setWheelChairCost(int i);
-    int getWheelChairCost();
+    void setWheelChairPrice(int i);
+    int getWheelChairPrice();
 
     void setMemberPrice(int i);
     int getMemberPrice();

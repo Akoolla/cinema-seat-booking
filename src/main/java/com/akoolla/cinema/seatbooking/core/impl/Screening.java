@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.mongojack.ObjectId;
 import org.pojomatic.Pojomatic;
 import org.pojomatic.annotations.AutoProperty;
 
@@ -13,6 +14,7 @@ import com.akoolla.cinema.seatbooking.core.IScreening;
 import com.akoolla.cinema.seatbooking.core.ScreeningIsFullyBookedException;
 import com.akoolla.cinema.seatbooking.core.film.Film;
 import com.akoolla.cinema.seatbooking.core.film.IFilm;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -23,36 +25,61 @@ import lombok.EqualsAndHashCode;
 
 /**
  * Screening.
- *
- * @author rich
- * @version $Id$
+ * @author richardt
  */
 @AutoProperty
 @EqualsAndHashCode
 public class Screening implements IScreening, Comparable<IScreening> {
-    
+
+    public static final String FILM_JSON_PROP = "flim";
+    public static final String BOOKINGS_JSON_PROP = "bookings";
+    public static final String DATE_JSON_PROP = "screeningTime";
+    public static final String MAX_SEATS_PROP = "maxSeats";
+    public static final String MAX_WHEELCHARS_PROP = "maxWheelChairs";
+
+    // Prices
+    public static final String CONCESSION_PRICE_PROP = "concessionPrice";
+    public static final String STD_PRICE_PROP = "standardPrice";
+    public static final String WHEELCHAIR_PRICE_PROP = "wheelChairPrice";
+    public static final String MEMBER_STD_PRICE_PROP = "memberStandardPrice";
+    public static final String MEMBER_CONCESSION_PRICE_PROP = "memberConcessionPrice";
+    public static final String MEMBER_WHEELCHAIR_PRICE_PROP = "memberWheelChairPrice";
+
+    @ObjectId
     public String _id;
 
-    private DateTime screeningTime;
-    
+    @JsonProperty(DATE_JSON_PROP)
     @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = As.PROPERTY, property = "@class")
-    @JsonProperty()
+    private DateTime screeningTime;
+
+    @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = As.PROPERTY, property = "@class")
+    @JsonProperty(BOOKINGS_JSON_PROP)
     private final List<IBooking> bookings;
 
+    @JsonProperty(FILM_JSON_PROP)
+    @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = As.PROPERTY, property = "@class")
     private Film film;
+
+    @JsonProperty(MAX_SEATS_PROP)
     private int maxSeats = 0;
+    @JsonProperty(MAX_WHEELCHARS_PROP)
     private int maxWheelchairs = 0;
-    
-    //Costs
-    private int concessionCost = 0;
-    private int StandardCost = 0;
-    private int wheelChairCost = 0;
-    
-    //Member costs
+
+    // Standard Prices
+    @JsonProperty(CONCESSION_PRICE_PROP)
+    private int concessionPrice = 0;
+    @JsonProperty(STD_PRICE_PROP)
+    private int standardPrice = 0;
+    @JsonProperty(WHEELCHAIR_PRICE_PROP)
+    private int wheelChairPrice = 0;
+
+    // Member Prices
+    @JsonProperty(MEMBER_STD_PRICE_PROP)
     private int memberPrice = 0;
-    private int memberConceesions = 0;
+    @JsonProperty(MEMBER_CONCESSION_PRICE_PROP)
+    private int memberConcessions = 0;
+    @JsonProperty(MEMBER_WHEELCHAIR_PRICE_PROP)
     private int memberWheelChair = 0;
-    
 
     /**
      * Return the film.
@@ -67,20 +94,41 @@ public class Screening implements IScreening, Comparable<IScreening> {
         bookings = new ArrayList<>();
     }
 
-    public Screening(DateTime screeningTime, int seats, int wheelchair) {
+    public Screening(DateTime screeningTime, int maxSeats, int maxWheelchairs) {
         this();
         this.screeningTime = screeningTime;
-        this.maxSeats = seats;
-        this.maxWheelchairs = wheelchair;
+        this.maxSeats = maxSeats;
+        this.maxWheelchairs = maxWheelchairs;
     }
 
-    public Screening(DateTime screeningTime, IFilm film, int numOfSeats, int numOfWheelChairs) {
-        this(screeningTime, numOfSeats, numOfWheelChairs);
-
+    public Screening(DateTime screeningTime, IFilm film, int maxSeats, int maxWheelchairs) {
+        this(screeningTime, maxSeats, maxWheelchairs);
         // TODO: Hack to fix jackson deserialisation issue - should really look at jackson rather than do this
         this.film = new Film(film.getUniqueReference(), film.getName(), film.getDescription(), film.getRating());
     }
-
+    
+    @JsonCreator
+    private Screening(
+            @JsonProperty(DATE_JSON_PROP) DateTime screeningTime, 
+            @JsonProperty(FILM_JSON_PROP)IFilm film, 
+            @JsonProperty(MAX_SEATS_PROP) int maxSeats, 
+            @JsonProperty(MAX_WHEELCHARS_PROP) int maxWheelchairs,
+            @JsonProperty(CONCESSION_PRICE_PROP) int concessionPrice,
+            @JsonProperty(STD_PRICE_PROP) int standardPrice,
+            @JsonProperty(WHEELCHAIR_PRICE_PROP) int wheelChairPrice,
+            @JsonProperty(MEMBER_STD_PRICE_PROP) int memberPrice,
+            @JsonProperty(MEMBER_CONCESSION_PRICE_PROP) int memberConcessions,
+            @JsonProperty(MEMBER_WHEELCHAIR_PRICE_PROP) int memberWheelChair
+            ){
+        this(screeningTime, film, maxSeats, maxWheelchairs);
+        this.concessionPrice = concessionPrice;
+        this.standardPrice = standardPrice;
+        this.wheelChairPrice = wheelChairPrice;
+        this.memberPrice = memberPrice;
+        this.memberConcessions = memberConcessions;
+        this.memberWheelChair = memberWheelChair;
+    }
+    
     /**
      * @param bookingRequest
      * @return
@@ -88,17 +136,16 @@ public class Screening implements IScreening, Comparable<IScreening> {
      */
     public IBooking createBooking(IBookingRequest bookingRequest) throws ScreeningIsFullyBookedException {
 
-        
-        //TODO: More validation on seats being booked for wheelchairs..
-        if (((bookingRequest.getNumberOfStandardSeats() + bookingRequest.getNumberOfConcessionSeats() + getNumberOfBookedSeats(SEAT_TYPE.STANDARD)) > getNumberOfBookableSeats(SEAT_TYPE.STANDARD))
+        // TODO: More validation on seats being booked for wheelchairs..
+        if (((bookingRequest.getNumberOfStandardSeats() + bookingRequest.getNumberOfConcessionSeats()
+                + getNumberOfBookedSeats(SEAT_TYPE.STANDARD)) > getNumberOfBookableSeats(SEAT_TYPE.STANDARD))
                 & (bookingRequest.overrideSeatLimits() == false)) {
             throw new ScreeningIsFullyBookedException();
         }
-                
 
-        Booking booking = new Booking(bookingRequest.getNumberOfStandardSeats(), 
-                bookingRequest.getNumberOfConcessionSeats(), 
-                bookingRequest.getNumberOfWheelChairs(), 
+        Booking booking = new Booking(bookingRequest.getNumberOfStandardSeats(),
+                bookingRequest.getNumberOfConcessionSeats(),
+                bookingRequest.getNumberOfWheelChairs(),
                 new Customer(bookingRequest.getCustomerName(), bookingRequest.getContactNumber()));
         bookings.add(booking);
 
@@ -109,13 +156,13 @@ public class Screening implements IScreening, Comparable<IScreening> {
      * @return
      * @see com.akoolla.cinemabooking.IScreening#listBookings()
      */
-     @JsonDeserialize(keyAs=Booking.class)
+    @JsonDeserialize(keyAs = Booking.class)
     public List<IBooking> listBookings() {
         return bookings;
     }
 
     /**
-     * @param standard 
+     * @param standard
      * @return
      * @see com.akoolla.cinemabooking.IScreening#getNumberOfBookedSeats()
      */
@@ -170,7 +217,7 @@ public class Screening implements IScreening, Comparable<IScreening> {
             return -1;
         }
     }
-    
+
     @Override
     public String get_id() {
         return _id;
@@ -208,8 +255,8 @@ public class Screening implements IScreening, Comparable<IScreening> {
      * @see com.akoolla.cinema.seatbooking.core.IScreening#getConncessionCost()
      */
     @Override
-    public int getConncessionCost() {
-        return concessionCost;
+    public int getConncessionPrice() {
+        return concessionPrice;
     }
 
     /**
@@ -217,8 +264,8 @@ public class Screening implements IScreening, Comparable<IScreening> {
      * @see com.akoolla.cinema.seatbooking.core.IScreening#setConcessionCost(int)
      */
     @Override
-    public void setConcessionCost(int concessionCost) {
-        this.concessionCost = concessionCost;
+    public void setConcessionPrice(int concessionCost) {
+        this.concessionPrice = concessionCost;
     }
 
     /**
@@ -226,8 +273,8 @@ public class Screening implements IScreening, Comparable<IScreening> {
      * @see com.akoolla.cinema.seatbooking.core.IScreening#setStandardCost(int)
      */
     @Override
-    public void setStandardCost(int StandardCost) {
-        this.StandardCost = StandardCost;
+    public void setStandardPrice(int StandardCost) {
+        this.standardPrice = StandardCost;
     }
 
     /**
@@ -235,8 +282,8 @@ public class Screening implements IScreening, Comparable<IScreening> {
      * @see com.akoolla.cinema.seatbooking.core.IScreening#getStandardCost()
      */
     @Override
-    public int getStandardCost() {
-        return StandardCost;
+    public int getStandardPrice() {
+        return standardPrice;
     }
 
     /**
@@ -244,8 +291,8 @@ public class Screening implements IScreening, Comparable<IScreening> {
      * @see com.akoolla.cinema.seatbooking.core.IScreening#setWheelChairCost(int)
      */
     @Override
-    public void setWheelChairCost(int wheelChairCost) {
-        this.wheelChairCost = wheelChairCost;
+    public void setWheelChairPrice(int wheelChairCost) {
+        this.wheelChairPrice = wheelChairCost;
     }
 
     /**
@@ -253,8 +300,8 @@ public class Screening implements IScreening, Comparable<IScreening> {
      * @see com.akoolla.cinema.seatbooking.core.IScreening#getWheelChairCost()
      */
     @Override
-    public int getWheelChairCost() {
-        return wheelChairCost;
+    public int getWheelChairPrice() {
+        return wheelChairPrice;
     }
 
     /**
@@ -280,8 +327,8 @@ public class Screening implements IScreening, Comparable<IScreening> {
      * @see com.akoolla.cinema.seatbooking.core.IScreening#setMemberConcession(int)
      */
     @Override
-    public void setMemberConcession(int memberConceesions) {
-        this.memberConceesions = memberConceesions;
+    public void setMemberConcession(int memberConcessions) {
+        this.memberConcessions = memberConcessions;
     }
 
     /**
@@ -290,7 +337,7 @@ public class Screening implements IScreening, Comparable<IScreening> {
      */
     @Override
     public int getMemberConcession() {
-        return memberConceesions;
+        return memberConcessions;
     }
 
     /**

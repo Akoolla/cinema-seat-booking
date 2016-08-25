@@ -16,8 +16,6 @@ public interface IBooking {
     
     int getNumberOfWheelChairs();
 
-    boolean hasBeenPaidFor();
-
     DateTime dateOfBooking();
 
     boolean isCancelled();

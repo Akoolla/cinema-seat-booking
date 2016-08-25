@@ -3,6 +3,9 @@ package com.akoolla.cinema.seatbooking.core.film;
 import org.pojomatic.Pojomatic;
 import org.pojomatic.annotations.AutoProperty;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.EqualsAndHashCode;
 
 /**
@@ -14,15 +17,30 @@ import lombok.EqualsAndHashCode;
 @AutoProperty
 @EqualsAndHashCode
 public class Film implements IFilm {
+    public static final String REF_JSON_PROP = "ref";
+    public static final String NAME_JSON_PROP = "name";
+    public static final String DESC_JSON_PROP = "description";
+    public static final String RATING_JSON_PROP = "rating";
+    
+    @JsonProperty(REF_JSON_PROP)
     private String ref;
+    @JsonProperty(NAME_JSON_PROP)
     private String name;
+    @JsonProperty(DESC_JSON_PROP)
     private String description;
+    @JsonProperty(RATING_JSON_PROP)
     private String rating;
 
-    public Film() {
+    private Film() {
     }
 
-    public Film(final String ref, final String name, final String description, final String rating) {
+    @JsonCreator
+    public Film(
+            @JsonProperty(REF_JSON_PROP)final String ref, 
+            @JsonProperty(NAME_JSON_PROP)final String name, 
+            @JsonProperty(DESC_JSON_PROP)final String description, 
+            @JsonProperty(RATING_JSON_PROP) final String rating) {
+        this();
         this.ref = ref;
         this.name = name;
         this.description = description;

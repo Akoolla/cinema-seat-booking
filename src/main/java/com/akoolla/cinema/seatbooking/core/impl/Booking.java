@@ -1,6 +1,7 @@
 package com.akoolla.cinema.seatbooking.core.impl;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.pojomatic.annotations.AutoProperty;
 
 import com.akoolla.cinema.seatbooking.core.IBooking;
@@ -16,58 +17,87 @@ import lombok.EqualsAndHashCode;
 /**
  * Booking.
  *
- * @author rich
- * @version $Id$
+ * @author richardt
  */
 @AutoProperty
 @EqualsAndHashCode
 public class Booking implements IBooking {
-
+    public static final String REF_JSON_PROP = "bookingReference";
+    public static final String STANDARD_SEATS_JSON_PROP = "numStandardSeats";
+    public static final String CONESSIONS_REF_JSON_PROP = "numConcessionSeats";
+    public static final String WHEELCHAIRS_JSON_PROP = "numWheelChairs";
+    public static final String CUSTOMER_JSON_PROP = "customer";
+    public static final String BOOKING_DATE = "dateOfBooking";
+    
+    
     @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = As.PROPERTY, property = "@class")
-    @JsonProperty
+    @JsonProperty(REF_JSON_PROP)
     private final IBookingReference bookingReference;
     
-    @JsonProperty
+    @JsonProperty(STANDARD_SEATS_JSON_PROP)
     private int numStandardSeats = 0;
-    @JsonProperty
+    
+    @JsonProperty(CONESSIONS_REF_JSON_PROP)
     private int numConcessionSeats  = 0;
-    @JsonProperty
+    
+    @JsonProperty(WHEELCHAIRS_JSON_PROP)
     private int numWheelChairs  = 0;
-    
-    
+        
     @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = As.PROPERTY, property = "@class")
     @JsonProperty
     private final ICustomer customer;
 
-    @JsonCreator
+    @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = As.PROPERTY, property = "@class")
+    @JsonProperty(BOOKING_DATE)
+    private final DateTime dateOfBooking;
+    
+    /**
+     * Creates a new booking with a new unique booking reference
+     * @param numStandardSeats
+     * @param numConcessionSeats
+     * @param numWheelChairs
+     * @param customer
+     */
     public Booking(
-            @JsonProperty("numStandardSeats") int numStandardSeats, 
-            @JsonProperty("numConcessionSeats") int numConcessionSeats, 
-            @JsonProperty("numWheelChairs") int numWheelChairs, 
-            @JsonProperty("customer") ICustomer customer) {
+            int numStandardSeats, 
+            int numConcessionSeats, 
+            int numWheelChairs, 
+            ICustomer customer) {
         
-        
-        bookingReference = new BookingReference();
+        this.bookingReference = new BookingReference();
         this.numStandardSeats = numStandardSeats;
         this.numConcessionSeats = numConcessionSeats;
         this.numWheelChairs = numWheelChairs;
+        this.customer = customer;
+        
+        //TODO: Something to set default Zone maybe in the constructor
+        this.dateOfBooking = DateTime.now(DateTimeZone.getDefault());
+    }
+    
+    @JsonCreator
+    private Booking(
+            @JsonProperty(STANDARD_SEATS_JSON_PROP) int numStandardSeats, 
+            @JsonProperty(CONESSIONS_REF_JSON_PROP) int numConcessionSeats, 
+            @JsonProperty(WHEELCHAIRS_JSON_PROP) int numWheelChairs, 
+            @JsonProperty(CUSTOMER_JSON_PROP) ICustomer customer,
+            @JsonProperty(REF_JSON_PROP) IBookingReference bookingRef,
+            @JsonProperty(BOOKING_DATE) DateTime dateOfBooking) {
+
+        this.numStandardSeats = numStandardSeats;
+        this.numConcessionSeats = numConcessionSeats;
+        this.numWheelChairs = numWheelChairs;
+        this.bookingReference = bookingRef;
+        this.dateOfBooking = dateOfBooking;
         
         this.customer = customer;
     }
-    /**
-     * @return
-     * @see com.akoolla.cinemabooking.IBooking#hasBeenPaidFor()
-     */
-    public boolean hasBeenPaidFor() {
-        return false;
-    }
-
+    
     /**
      * @return
      * @see com.akoolla.cinemabooking.IBooking#dateOfBooking()
      */
     public DateTime dateOfBooking() {
-        return null;
+        return dateOfBooking;
     }
 
     /**
@@ -115,6 +145,6 @@ public class Booking implements IBooking {
      */
     @Override
     public int getNumberOfWheelChairs() {
-        return getNumberOfConcessionSeats();
+        return numWheelChairs;
     }
 }
