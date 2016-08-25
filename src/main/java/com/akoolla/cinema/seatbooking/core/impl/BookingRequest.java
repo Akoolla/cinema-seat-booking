@@ -19,16 +19,14 @@ public class BookingRequest implements IBookingRequest {
     private final String customerName;
     private final String contactNumber;
 
-    private int numStandardSeats = 0;
-    private int numConcessionSeats = 0;
+    private int numOfSeats = 0;
     private int numWheelChairs = 0;
     
     
     private boolean overideSeatLimits = false;
 
-    public BookingRequest(String customerName, String contactNumber, int numStandardSeats, int numConcessionSeats, int numWheelChairs) {
-        this.numStandardSeats = numStandardSeats;
-        this.numConcessionSeats = numConcessionSeats;
+    public BookingRequest(String customerName, String contactNumber, int numOfSeats, int numWheelChairs) {
+        this.numOfSeats = numOfSeats;
         this.numWheelChairs = numWheelChairs;
         
         this.customerName = customerName;
@@ -80,24 +78,6 @@ public class BookingRequest implements IBookingRequest {
 
     /**
      * @return
-     * @see com.akoolla.cinema.seatbooking.core.IBookingRequest#getNumberOfStandardSeats()
-     */
-    @Override
-    public int getNumberOfStandardSeats() {
-        return numStandardSeats;
-    }
-
-    /**
-     * @return
-     * @see com.akoolla.cinema.seatbooking.core.IBookingRequest#getNumberOfConcessionSeats()
-     */
-    @Override
-    public int getNumberOfConcessionSeats() {
-        return numConcessionSeats;
-    }
-
-    /**
-     * @return
      * @see com.akoolla.cinema.seatbooking.core.IBookingRequest#getNumberOfWheelChairs()
      */
     @Override
@@ -111,6 +91,6 @@ public class BookingRequest implements IBookingRequest {
      */
     @Override
     public int getNumberOfSeats() {
-        return getNumberOfConcessionSeats() + getNumberOfStandardSeats();
+        return numOfSeats;
     }
 }

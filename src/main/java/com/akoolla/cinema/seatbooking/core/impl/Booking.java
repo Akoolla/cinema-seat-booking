@@ -23,8 +23,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode
 public class Booking implements IBooking {
     public static final String REF_JSON_PROP = "bookingReference";
-    public static final String STANDARD_SEATS_JSON_PROP = "numStandardSeats";
-    public static final String CONESSIONS_REF_JSON_PROP = "numConcessionSeats";
+    public static final String STANDARD_SEATS_JSON_PROP = "numberOfSeats";
     public static final String WHEELCHAIRS_JSON_PROP = "numWheelChairs";
     public static final String CUSTOMER_JSON_PROP = "customer";
     public static final String BOOKING_DATE = "dateOfBooking";
@@ -36,9 +35,6 @@ public class Booking implements IBooking {
     
     @JsonProperty(STANDARD_SEATS_JSON_PROP)
     private int numStandardSeats = 0;
-    
-    @JsonProperty(CONESSIONS_REF_JSON_PROP)
-    private int numConcessionSeats  = 0;
     
     @JsonProperty(WHEELCHAIRS_JSON_PROP)
     private int numWheelChairs  = 0;
@@ -53,20 +49,17 @@ public class Booking implements IBooking {
     
     /**
      * Creates a new booking with a new unique booking reference
-     * @param numStandardSeats
-     * @param numConcessionSeats
+     * @param numberOfSeats
      * @param numWheelChairs
      * @param customer
      */
     public Booking(
-            int numStandardSeats, 
-            int numConcessionSeats, 
+            int numberOfSeats, 
             int numWheelChairs, 
             ICustomer customer) {
         
         this.bookingReference = new BookingReference();
-        this.numStandardSeats = numStandardSeats;
-        this.numConcessionSeats = numConcessionSeats;
+        this.numStandardSeats = numberOfSeats;
         this.numWheelChairs = numWheelChairs;
         this.customer = customer;
         
@@ -76,15 +69,13 @@ public class Booking implements IBooking {
     
     @JsonCreator
     private Booking(
-            @JsonProperty(STANDARD_SEATS_JSON_PROP) int numStandardSeats, 
-            @JsonProperty(CONESSIONS_REF_JSON_PROP) int numConcessionSeats, 
+            @JsonProperty(STANDARD_SEATS_JSON_PROP) int numberOfSeats,
             @JsonProperty(WHEELCHAIRS_JSON_PROP) int numWheelChairs, 
             @JsonProperty(CUSTOMER_JSON_PROP) ICustomer customer,
             @JsonProperty(REF_JSON_PROP) IBookingReference bookingRef,
             @JsonProperty(BOOKING_DATE) DateTime dateOfBooking) {
 
-        this.numStandardSeats = numStandardSeats;
-        this.numConcessionSeats = numConcessionSeats;
+        this.numStandardSeats = numberOfSeats;
         this.numWheelChairs = numWheelChairs;
         this.bookingReference = bookingRef;
         this.dateOfBooking = dateOfBooking;
@@ -125,19 +116,11 @@ public class Booking implements IBooking {
     }
     /**
      * @return
-     * @see com.akoolla.cinema.seatbooking.core.IBooking#getNumberOfStandardSeats()
+     * @see com.akoolla.cinema.seatbooking.core.IBooking#getNumberOfSeats()
      */
     @Override
-    public int getNumberOfStandardSeats() {
+    public int getNumberOfSeats() {
         return numStandardSeats;
-    }
-    /**
-     * @return
-     * @see com.akoolla.cinema.seatbooking.core.IBooking#getNumberOfConcessionSeats()
-     */
-    @Override
-    public int getNumberOfConcessionSeats() {
-        return numConcessionSeats;
     }
     /**
      * @return

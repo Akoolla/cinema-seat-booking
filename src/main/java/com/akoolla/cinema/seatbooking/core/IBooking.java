@@ -10,17 +10,10 @@ import org.joda.time.DateTime;
  */
 public interface IBooking {
 
-    int getNumberOfStandardSeats();
-    
-    int getNumberOfConcessionSeats();
-    
+    int getNumberOfSeats();
     int getNumberOfWheelChairs();
-
     DateTime dateOfBooking();
-
     boolean isCancelled();
-
     ICustomer getCustomer();
-
     IBookingReference getBookingReference();
 }

@@ -45,24 +45,5 @@ public interface IScreening {
     public enum SEAT_TYPE {
         STANDARD, WHEELCHAIR;
     }
-    
-    int getConncessionPrice();
-    void setConcessionPrice(int i);
-
-   
-    void setStandardPrice(int i);
-    int getStandardPrice();
-
-    void setWheelChairPrice(int i);
-    int getWheelChairPrice();
-
-    void setMemberPrice(int i);
-    int getMemberPrice();
-
-    void setMemberConcession(int i);
-    int getMemberConcession();
-
-    void setMemberWheelChairPrice(int i);
-    int getMemberWheelChairPrice();
 }
 
