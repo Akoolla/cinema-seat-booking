@@ -12,7 +12,6 @@ import com.akoolla.cinema.seatbooking.core.IBooking;
 import com.akoolla.cinema.seatbooking.core.IBookingRequest;
 import com.akoolla.cinema.seatbooking.core.IScreening;
 import com.akoolla.cinema.seatbooking.core.ScreeningIsFullyBookedException;
-import com.akoolla.cinema.seatbooking.core.film.Film;
 import com.akoolla.cinema.seatbooking.core.film.IFilm;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -50,7 +49,7 @@ public class Screening implements IScreening, Comparable<IScreening> {
 
     @JsonProperty(FILM_JSON_PROP)
     @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = As.PROPERTY, property = "@class")
-    private Film film;
+    private IFilm film;
 
     @JsonProperty(MAX_SEATS_PROP)
     private int maxSeats = 0;
@@ -81,7 +80,8 @@ public class Screening implements IScreening, Comparable<IScreening> {
         this.screeningTime = screeningTime;
         this.maxSeats = maxSeats;
         this.maxWheelchairs = maxWheelchairs;
-    }
+        this.film = film;     
+    }                       
     
     /**
      * @param bookingRequest

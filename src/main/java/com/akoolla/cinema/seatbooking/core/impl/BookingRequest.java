@@ -28,7 +28,6 @@ public class BookingRequest implements IBookingRequest {
     public BookingRequest(String customerName, String contactNumber, int numOfSeats, int numWheelChairs) {
         this.numOfSeats = numOfSeats;
         this.numWheelChairs = numWheelChairs;
-        
         this.customerName = customerName;
         this.contactNumber = contactNumber;
     }
