@@ -29,7 +29,7 @@ public class BookingReference implements IBookingReference {
     }
     
     @JsonCreator
-    private BookingReference(@JsonProperty(REF_JSON_PROP) String reference){
+    public BookingReference(@JsonProperty(REF_JSON_PROP) String reference){
         this.reference = reference;
     }
     

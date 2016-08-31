@@ -14,7 +14,11 @@ public interface IBookingService {
     
     IScreening findScreening(final String screeningRef);
 
-    void cancelABooking(final IBooking bookingToCancel);
+    /**
+     * @param bookingRef
+     * @throws IllegalArgumentException if booking not found
+     */
+    void cancelABooking(final String bookingRef)  throws IllegalArgumentException;
 
     List<IBooking> listBookings(final String screeningRef);
 
