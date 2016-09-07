@@ -13,4 +13,5 @@ public interface IBookingRequest {
     void overrideSeatLimits(boolean overide);
     int getNumberOfSeats();
     int getNumberOfWheelChairs();
+    String getEmail();
 }

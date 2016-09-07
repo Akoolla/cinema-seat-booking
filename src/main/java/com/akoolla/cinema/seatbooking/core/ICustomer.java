@@ -10,4 +10,6 @@ public interface ICustomer {
     String getCustomerName();
 
     String getContactNumber();
+    
+    String getEmail();
 }

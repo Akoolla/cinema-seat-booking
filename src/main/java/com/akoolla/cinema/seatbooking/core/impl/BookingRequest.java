@@ -18,17 +18,19 @@ import lombok.EqualsAndHashCode;
 public class BookingRequest implements IBookingRequest {
     private final String customerName;
     private final String contactNumber;
-
+    private final String email;
+    
     private int numOfSeats = 0;
     private int numWheelChairs = 0;
     
     
     private boolean overideSeatLimits = false;
 
-    public BookingRequest(String customerName, String contactNumber, int numOfSeats, int numWheelChairs) {
+    public BookingRequest(String customerName, String email, int numOfSeats, int numWheelChairs, String contactNumber) {
         this.numOfSeats = numOfSeats;
         this.numWheelChairs = numWheelChairs;
         this.customerName = customerName;
+        this.email = email;
         this.contactNumber = contactNumber;
     }
 
@@ -91,5 +93,14 @@ public class BookingRequest implements IBookingRequest {
     @Override
     public int getNumberOfSeats() {
         return numOfSeats;
+    }
+
+    /**
+     * @return
+     * @see com.akoolla.cinema.seatbooking.core.IBookingRequest#getEmail()
+     */
+    @Override
+    public String getEmail() {
+        return email;
     }
 }

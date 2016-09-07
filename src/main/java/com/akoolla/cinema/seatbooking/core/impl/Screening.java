@@ -98,7 +98,7 @@ public class Screening implements IScreening, Comparable<IScreening> {
 
         Booking booking = new Booking(bookingRequest.getNumberOfSeats(),
                 bookingRequest.getNumberOfWheelChairs(),
-                new Customer(bookingRequest.getCustomerName(), bookingRequest.getContactNumber()));
+                new Customer(bookingRequest.getCustomerName(), bookingRequest.getContactNumber(), bookingRequest.getEmail()));
         bookings.add(booking);
 
         return booking;
