@@ -1,8 +1,5 @@
 package com.akoolla.cinema.seatbooking.core;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import java.util.List;
 
@@ -25,14 +22,14 @@ public class ScreeningBookingTests extends Mockito {
 
     @Before
     public void initialiseTests() {
-        screening = new Screening(new DateTime(), mock(IFilm.class), 9, 0);
+        screening = new Screening(new DateTime(), mock(IFilm.class), 9, 0, true);
     }
 
     @Test
     public void ScreeningShouldReturnTheDateTimeOfTheScreening() throws Exception {
         DateTime now = new DateTime();
 
-        screening = new Screening(now, mock(IFilm.class), 9, 0);
+        screening = new Screening(now, mock(IFilm.class), 9, 0, true);
         assertEquals(now, screening.getScreeningTime());
     }
 
@@ -62,7 +59,7 @@ public class ScreeningBookingTests extends Mockito {
 
     @Test
     public void ItShouldBePossibleToSetTheNumberOfSeatsAvailableForAScreening() {
-        IScreening screening = new Screening(new DateTime(), mock(IFilm.class), 20, 0);
+        IScreening screening = new Screening(new DateTime(), mock(IFilm.class), 20, 0, true);
         assertEquals(20, screening.getNumberOfBookableSeats(SEAT_TYPE.STANDARD));
     }
 

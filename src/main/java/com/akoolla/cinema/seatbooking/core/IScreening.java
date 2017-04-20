@@ -45,5 +45,7 @@ public interface IScreening {
     public enum SEAT_TYPE {
         STANDARD, WHEELCHAIR;
     }
+    
+    boolean cannotBook();
 }
 

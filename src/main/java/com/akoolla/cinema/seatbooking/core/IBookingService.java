@@ -37,9 +37,10 @@ public interface IBookingService {
      *
      * @param screening
      * @throws IllegalArgumentException
+     * @throws IllegalAccessException 
      * @since 1.0
      */
-    IScreening createScreening(final IScreening screening) throws IllegalArgumentException;
+    IScreening createScreening(final IScreening screening) throws IllegalArgumentException, IllegalAccessException;
 
     /**
      * TODO.

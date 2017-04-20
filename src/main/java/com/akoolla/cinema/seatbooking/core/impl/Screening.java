@@ -35,6 +35,7 @@ public class Screening implements IScreening, Comparable<IScreening> {
     public static final String DATE_JSON_PROP = "screeningTime";
     public static final String MAX_SEATS_PROP = "maxSeats";
     public static final String MAX_WHEELCHARS_PROP = "maxWheelChairs";
+    public static final String IS_BOOKABLE_PROP = "cannotBook";
 
     @ObjectId
     public String _id;
@@ -55,6 +56,9 @@ public class Screening implements IScreening, Comparable<IScreening> {
     private int maxSeats = 0;
     @JsonProperty(MAX_WHEELCHARS_PROP)
     private int maxWheelchairs = 0;
+    
+    @JsonProperty(IS_BOOKABLE_PROP)
+    private boolean cannotBook = false;
 
     /**
      * Return the film.
@@ -74,13 +78,15 @@ public class Screening implements IScreening, Comparable<IScreening> {
             @JsonProperty(DATE_JSON_PROP) DateTime screeningTime,
             @JsonProperty(FILM_JSON_PROP)IFilm film, 
             @JsonProperty(MAX_SEATS_PROP) int maxSeats, 
-            @JsonProperty(MAX_WHEELCHARS_PROP) int maxWheelchairs
+            @JsonProperty(MAX_WHEELCHARS_PROP) int maxWheelchairs, 
+            @JsonProperty(IS_BOOKABLE_PROP) boolean cannotBook
             ){
         this();
         this.screeningTime = screeningTime;
         this.maxSeats = maxSeats;
         this.maxWheelchairs = maxWheelchairs;
-        this.film = film;     
+        this.film = film;
+        this.cannotBook = cannotBook;
     }                       
     
     /**
@@ -209,5 +215,14 @@ public class Screening implements IScreening, Comparable<IScreening> {
             default:
                 return maxSeats;
         }
+    }
+
+    /**
+     * @return
+     * @see com.akoolla.cinema.seatbooking.core.IScreening#cannotBook()
+     */
+    @Override
+    public boolean cannotBook() {
+        return cannotBook;
     }
 }
